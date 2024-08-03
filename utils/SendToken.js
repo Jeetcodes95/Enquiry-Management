@@ -7,8 +7,6 @@ exports.sendtoken = (user, statusCode, res) => {
       const options = {
         expires: new Date(Date.now() + process.env.COOKIE_EXPIRE * 4 * 60 * 60 * 1000),
         httpOnly: true,
-        // sameSite: "None",
-        // secure: true,
       };
   
       res

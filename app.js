@@ -61,9 +61,9 @@ app.use('/api/users', userRoutes)
 app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/notifications', notificationRoutes)
 
-// app.get('/', (req, res) => {
-//     res.send('Server started successfully');
-//   });
+app.get('/', (req, res) => {
+    res.send('Server started successfully');
+  });
 
 // Error Handling
 const ErrorHandler = require("./utils/ErrorHandler");
