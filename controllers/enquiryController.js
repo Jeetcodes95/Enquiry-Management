@@ -3,10 +3,9 @@ const { catchAsyncErrors } = require("../middlewares/catchAsyncErrors");
 const userModel = require('../models/userModel');
 const Notification = require('../models/notificationModel');
 
-// Create an enquiry
+// Creating an enquiry
 exports.createEnquiry = catchAsyncErrors(async (req, res) => {
   const { title, description } = req.body;
-  // const userId = await userModel.findOne(req.id).exec();
   const userId = req.id
 
   try {
@@ -22,7 +21,7 @@ exports.createEnquiry = catchAsyncErrors(async (req, res) => {
   }
 });
 
-
+// fetch all enquiries role wise
 exports.getAllEnquiries = catchAsyncErrors(async (req, res) => {
   const { page = 1, limit = 10, search = '', status = '' } = req.query;
   const userId = req.id; 
@@ -37,7 +36,6 @@ exports.getAllEnquiries = catchAsyncErrors(async (req, res) => {
 
     const query = {};
 
-    // Admin can see all enquiries, while regular users see only their own
     if (userRole !== 'admin') {
       query.userId = userId;
     }
@@ -80,7 +78,50 @@ exports.getAllEnquiries = catchAsyncErrors(async (req, res) => {
   }
 });
 
+exports.approvedEnq = catchAsyncErrors(async( req, res) => {
+  try {
+    const approvedEnq = await Enquiry.find({status: 'Accepted'}).exec();
+    console.log(approvedEnq);
+    
+    if(!approvedEnq){
+      res.status(403).json("Record not found")
+    }
+    res.status(200).json({success: true, approvedEnq})
+  } catch (error) {
+    console.log(error);
+    
+  }
+})
 
+exports.pendingEnq = catchAsyncErrors(async( req, res) => {
+  try {
+    const pendingEnq = await Enquiry.find({status: 'Pending'}).exec();
+    console.log(pendingEnq);
+    
+    if(!pendingEnq){
+      res.status(403).json("Record not found")
+    }
+    res.status(200).json({success: true, pendingEnq})
+  } catch (error) {
+    console.log(error);
+    
+  }
+})
+
+exports.declinedEnq = catchAsyncErrors(async( req, res) => {
+  try {
+    const declinedEnq = await Enquiry.find({status: 'Declined'}).exec();
+    console.log(declinedEnq);
+    
+    if(!declinedEnq){
+      res.status(403).json("Record not found")
+    }
+    res.status(200).json({success: true, declinedEnq})
+  } catch (error) {
+    console.log(error);
+    
+  }
+})
 
 
 // Update enquiry status (admin)
@@ -90,7 +131,6 @@ exports.updateEnquiryStatus = catchAsyncErrors(async (req, res) => {
   try {
     const enquiry = await Enquiry.findByIdAndUpdate(id, { status }, { new: true });
     
-    // Add notification
     if (status === 'Accepted') {
       const notification = new Notification({
         message: `Your enquiry titled "${enquiry.title}" has been approved.`,

@@ -1,5 +1,3 @@
-import { toast } from "react-toastify";
-
 import axios from "axios";
 import { SetUser, RemoveUser } from "../Reducers/userReducer";
 

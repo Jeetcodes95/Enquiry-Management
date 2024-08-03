@@ -13,7 +13,7 @@ export default function EnquiryForm({ onSubmit, notification, setNotification })
         setTitle('');
         setDescription('');
         setNotification('Enquiry submitted successfully!');
-        onSubmit(); // Pass the new submission to the parent component
+        onSubmit(); 
       }
     } catch (error) {
       setNotification('Failed to submit enquiry');

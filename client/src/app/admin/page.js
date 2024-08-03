@@ -8,6 +8,7 @@ import { asyncCurrentUser, asyncUserSignout } from '@/store/Actions/userActions'
 import StatisticsBox from '@/app/components/StatisticsBox';
 import SearchFilter from '@/app/components/SearchFilter';
 import EnquiriesTable from '@/app/components/EnquiriesTable';
+import Link from 'next/link';
 
 export default function AdminPanel() {
   const [enquiries, setEnquiries] = useState([]);
@@ -40,41 +41,43 @@ export default function AdminPanel() {
     }
   }, [isUser, user, dispatch, router]);
 
-  
+  const fetchEnquiries = async () => {
+    const response = await axios.get('/api/enquiries/getAllEnquiries', {
+      params: {
+        page: currentPage,
+        limit: 10,
+        search,
+        status: statusFilter
+      }
+    });
+    const data = response.data;
+    setEnquiries(data?.enquiries);
+    setStats({
+      totalApproved: data.totalApproved,
+      totalDeclined: data.totalDeclined,
+      totalPending: data.totalPending,
+      totalOnHold: data.totalOnHold,
+      totalEnquiries: data.totalEnquiries
+    });
+    setTotalPages(Math.ceil(data.totalEnquiries / 10));
+  };
 
   useEffect(() => {
-    const fetchEnquiries = async () => {
-      const response = await axios.get('/api/enquiries/getAllEnquiries', {
-        params: {
-          page: currentPage,
-          limit: 10,
-          search,
-          status: statusFilter
-        }
-      });
-      const data = response.data;
-      setEnquiries(data?.enquiries);
-      setStats({
-        totalApproved: data.totalApproved,
-        totalDeclined: data.totalDeclined,
-        totalPending: data.totalPending,
-        totalOnHold: data.totalOnHold,
-        totalEnquiries: data.totalEnquiries
-      });
-      setTotalPages(Math.ceil(data.totalEnquiries / 10));
-    };
     fetchEnquiries();
   }, [search, statusFilter, currentPage]);
 
   const handleAction = async (id, status) => {
     await axios.patch(`/api/enquiries/updateStatus/${id}`, { status });
     setEnquiries(enquiries.map(enquiry => (enquiry._id === id ? { ...enquiry, status } : enquiry)));
+    await fetchEnquiries();
   };
 
   const handleLogout = () => {
     dispatch(asyncUserSignout());
     router.push('/');
   };
+
+  
 
   return (
     <div className="p-4">
@@ -84,9 +87,9 @@ export default function AdminPanel() {
         <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded">Logout</button>
       </div>
       <div className="grid grid-cols-4 gap-4 mb-8">
-        <StatisticsBox title="Approved" value={stats.totalApproved} backgroundColor="bg-green-100" textColor="text-green-700" />
-        <StatisticsBox title="Declined" value={stats.totalDeclined} backgroundColor="bg-red-100" textColor="text-red-700" />
-        <StatisticsBox title="Pending" value={stats.totalPending} backgroundColor="bg-yellow-100" textColor="text-yellow-700" />
+        <Link href="/admin/Approvedpage"><StatisticsBox title="Approved" value={stats.totalApproved} backgroundColor="bg-green-100" textColor="text-green-700" /></Link>
+        <Link href="/admin/Declinedpage"><StatisticsBox title="Declined" value={stats.totalDeclined} backgroundColor="bg-red-100" textColor="text-red-700" /></Link>
+        <Link href="/admin/Pendingpage"> <StatisticsBox title="Pending" value={stats.totalPending} backgroundColor="bg-yellow-100" textColor="text-yellow-700" /></Link>
         <StatisticsBox title="Total Enquiries" value={stats.totalEnquiries} backgroundColor="bg-gray-100" textColor="text-gray-700" />
       </div>
       <SearchFilter search={search} setSearch={setSearch} statusFilter={statusFilter} setStatusFilter={setStatusFilter} />

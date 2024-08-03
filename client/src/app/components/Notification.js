@@ -65,7 +65,7 @@ export default function NotificationBell({ userId }) {
     setShowNotifications(!showNotifications);
     if (!showNotifications) {
       localStorage.setItem('lastSeenCount', notifications.length);
-      setCount(0); // Reset count when notifications are viewed
+      setCount(0); 
     }
   };
 

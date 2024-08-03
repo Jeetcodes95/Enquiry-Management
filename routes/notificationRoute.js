@@ -8,7 +8,7 @@ router.get('/:userId', async (req, res) => {
       const notifications = await Notification.find({ userId, read: false });
       res.json({ notifications });
     } catch (error) {
-      console.error('Error fetching notifications:', error);  // Add logging
+      console.error('Error fetching notifications:', error);  
       res.status(500).json({ error: 'Server error' });
     }
   });
