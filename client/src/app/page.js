@@ -26,7 +26,7 @@ export default function HomePage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="flex w-full max-w-6xl border">
+      <div className="flex w-full max-w-9xl border border-gray-300 dark:border-gray-700 rounded shadow-md">
         <div className="w-1/2 p-8 flex flex-col items-center justify-center space-y-6">
           <h1 className="text-4xl font-bold text-center">Welcome to the Enquiry Management System</h1>
           <p className="text-center">Please log in or sign up to access the admin or user panel.</p>

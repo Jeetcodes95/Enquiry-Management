@@ -67,10 +67,10 @@ const ErrorHandler = require("./utils/ErrorHandler");
 const { generatedErrors } = require("./middlewares/errors");
 
 // bundle frontend code here
-app.use(express.static(path.join(__dirname, '/client/out')));
+app.use(express.static(path.join(__dirname, '/client/.next')));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/client/out"));
+  res.sendFile(req, res);
 });
 // app.use("*", (req, res, next) => {
 //     next(new ErrorHandler(`Requested URL Not Found ${req.url}`, 404));
