@@ -70,7 +70,7 @@ const { generatedErrors } = require("./middlewares/errors");
 app.use(express.static(path.join(__dirname, '/client/.next')));
 
 app.get("*", (req, res) => {
-  res.sendFile(req, res);
+  res.sendFile(path.join(__dirname, "/client/.next"));
 });
 // app.use("*", (req, res, next) => {
 //     next(new ErrorHandler(`Requested URL Not Found ${req.url}`, 404));
