@@ -67,7 +67,7 @@ app.get('/', (req, res) => {
 
 // Error Handling
 const ErrorHandler = require("./utils/ErrorHandler");
-const { generatedErrors } = require("./Middlewares/errors");
+const { generatedErrors } = require("./middlewares/errors");
 
 app.use("*", (req, res, next) => {
     next(new ErrorHandler(`Requested URL Not Found ${req.url}`, 404));
