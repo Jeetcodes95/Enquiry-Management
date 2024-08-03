@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const http = require("http");
-const path = require("path");
 const userRoutes = require("./routes/userRoutes")
 const enquiryRoutes = require("./routes/enquiryRoutes")
 const notificationRoutes = require("./routes/notificationRoute")
@@ -62,19 +61,17 @@ app.use('/api/users', userRoutes)
 app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/notifications', notificationRoutes)
 
+app.get('/', (req, res) => {
+    res.send('Server started successfully');
+  });
+
 // Error Handling
 const ErrorHandler = require("./utils/ErrorHandler");
 const { generatedErrors } = require("./middlewares/errors");
 
-// bundle frontend code here
-app.use(express.static(path.join(__dirname, '/client/.next')));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/client/.next"));
-});
-// app.use("*", (req, res, next) => {
-//     next(new ErrorHandler(`Requested URL Not Found ${req.url}`, 404));
-//   });
+app.use("*", (req, res, next) => {
+    next(new ErrorHandler(`Requested URL Not Found ${req.url}`, 404));
+  });
 app.use(generatedErrors);
 
 
