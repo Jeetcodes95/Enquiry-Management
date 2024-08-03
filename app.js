@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const http = require("http");
-import path from "path";
+const path = require("path");
 const userRoutes = require("./routes/userRoutes")
 const enquiryRoutes = require("./routes/enquiryRoutes")
 const notificationRoutes = require("./routes/notificationRoute")
