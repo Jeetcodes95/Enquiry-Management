@@ -65,9 +65,15 @@ app.use('/api/notifications', notificationRoutes)
 const ErrorHandler = require("./utils/ErrorHandler");
 const { generatedErrors } = require("./middlewares/errors");
 
-app.use("*", (req, res, next) => {
-    next(new ErrorHandler(`Requested URL Not Found ${req.url}`, 404));
-  });
+// bundle frontend code here
+app.use(express.static(path.join(__dirname, "/client/next")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/client", "next", "index.html"));
+});
+// app.use("*", (req, res, next) => {
+//     next(new ErrorHandler(`Requested URL Not Found ${req.url}`, 404));
+//   });
 app.use(generatedErrors);
 
 
